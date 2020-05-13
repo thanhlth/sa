@@ -70,7 +70,7 @@
                       class="btn btn-default stat-item"
                       @click="viewPost(post)"
                     >
-                      <i class="fa fa-share icon"></i>
+                      <i class="fa fa-comment" aria-hidden="true"></i>
                     </a>
                   </div>
                 </div>
@@ -108,6 +108,7 @@
                       -->
                       <ul  v-show="postComments.length" class="comments-list">
                         <li  v-for="(comment,index) in postComments" class="comment" :key="index">
+                          <div v-if="comment.postId==post.id">
                           <a class="pull-left" href="#">
                             <img
                               class="avatar"
@@ -121,6 +122,7 @@
                               <h5 class="time">{{comment.createdOn | formatDate}}</h5>
                             </div>
                             <p>{{comment.content}}</p>
+                          </div>
                           </div>
                         </li>
                         
@@ -277,6 +279,7 @@ ref.doc(this.$route.params.id).get()
         });
     },
     viewPost(post) {
+      this.postComments=[]
     db.collection("comments").where('postId', '==', post.id).get().then(docs => {
         let commentsArray = []
 
@@ -284,11 +287,12 @@ ref.doc(this.$route.params.id).get()
             let comment = doc.data()
             comment.id = doc.id
             commentsArray.push(comment)
+            //console.log(doc);
         })
 
         this.postComments = commentsArray
         this.fullPost = post
-        
+       console.log(commentsArray)
     }).catch(err => {
         console.log(err)
     })
