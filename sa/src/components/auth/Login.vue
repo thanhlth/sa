@@ -6,7 +6,7 @@
         <div class="form-info col-md-6 col-xs-12">
       
       <div class="group">
-        <input class="control-custom" type="email" name="email" v-model="email" />
+        <input  type="email" name="email" v-model="email" />
         
         
 <label for="email">Email:</label>

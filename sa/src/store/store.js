@@ -10,7 +10,7 @@ fb.auth.onAuthStateChanged(user => {
         store.dispatch('fetchUserProfile')
 
         db.collection('posts').orderBy('createdOn', 'desc').onSnapshot(querySnapshot => {
-            console.log(querySnapshot);
+            //console.log(querySnapshot);
             let postsArray = []
 
             querySnapshot.forEach(doc => {
@@ -56,5 +56,10 @@ export const store = new Vuex.Store({
                 })
         },
         
+    },
+    getters:{
+        userProfile(state){
+            return state.userProfile;
+        }
     }
 })
