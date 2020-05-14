@@ -1,7 +1,7 @@
 <template>
   <div class="wall">
     <div class=" col-sm-12 ">
-      <div class=" panel panel-white post panel-shadow  "><p>{{this.user.alias}}</p></div>
+      <div class=" panel panel-white  panel-shadow  intro"><p>{{this.profile.alias}}</p></div>
       
     </div>
     <div class="posts container">
@@ -26,7 +26,7 @@
       <div >
         <div v-if="posts.length">
           <div v-for="(post, i) in posts" class="post" :key="i">
-            <div  class="col-sm-12">
+            <div  v-if="post.to==profile.alias" class="col-sm-12">
               <div class="panel panel-white post panel-shadow">
                 <div class="post-heading">
                   <div class="pull-left image">
@@ -50,23 +50,15 @@
                   <p>{{ post.content | trimLength }}</p>
                   <div class="stats">
                     <a
-                      href="#"
+                      
                       class="btn btn-default stat-item"
                       @click="likePost(post.id, post.likes)"
                     >
                       <i class="fa fa-thumbs-up icon"></i>{{ post.likes }}
                     </a>
-                    <a
-                      href="#"
-                      class="btn btn-default stat-item"
-                      @click="openCommentModal(post)"
-                    >
-                      <i class="fa fa-paper-plane icon"></i>
-                    </a>
-
                     
                     <a
-                      href="#"
+                      
                       class="btn btn-default stat-item"
                       @click="viewPost(post)"
                     >
@@ -82,9 +74,10 @@
                       placeholder="Add a comment"
                       v-model="comment.content"
                       type="text"
+                       @onClick="openCommentModal(post)"
                     />
                     <span class="input-group-addon">
-                      <a @click="addComment" :disabled="comment.content == ''" class="button"><i class="fa fa-edit"></i></a>
+                      <a @click="addComment" :disabled="comment.content == ''"><i class="fa fa-paper-plane icon"></i></a>
                     </span>
                     
                   </div>
@@ -137,9 +130,7 @@
             
           </div>
         </div>
-        <div v-else>
-          <p class="no-results">There are currently no posts</p>
-        </div>
+        
       </div>
     </div>
   </div>
@@ -163,7 +154,6 @@ export default {
         userId: "",
         content: "",
         postComments: 0,
-
       },
       
       
@@ -185,7 +175,8 @@ snapshot.forEach(doc => {
 })
 ref.doc(this.$route.params.id).get()
         .then(user =>{//user
-            this.profile = user.data()
+            this.profile = user.data(),
+            this.profile.id= doc.id
         })
   },
   methods: {
@@ -196,7 +187,7 @@ ref.doc(this.$route.params.id).get()
           content: this.post.content,
           userId: this.currentUser.uid,
           to: this.$route.params.id,
-          from:this.profile.alias,
+          from:this.user.alias,
           srcImg:null,
           comments: 0,
           likes: 0
@@ -225,7 +216,6 @@ ref.doc(this.$route.params.id).get()
       let postId = this.comment.postId;
       let postComments = this.comment.postComments;
       
-
       db.collection("comments")
         .add({
           createdOn: new Date(),
@@ -250,7 +240,6 @@ ref.doc(this.$route.params.id).get()
     },
     likePost(postId, postLikes) {
       let docId = `${this.currentUser.uid}_${postId}`;
-
       db.collection("likes")
         .doc(docId)
         .get()
@@ -258,7 +247,6 @@ ref.doc(this.$route.params.id).get()
           if (doc.exists) {
             return;
           }
-
           db.collection("likes")
             .doc(docId)
             .set({
@@ -282,14 +270,12 @@ ref.doc(this.$route.params.id).get()
       this.postComments=[]
     db.collection("comments").where('postId', '==', post.id).get().then(docs => {
         let commentsArray = []
-
         docs.forEach(doc => {
             let comment = doc.data()
             comment.id = doc.id
             commentsArray.push(comment)
             //console.log(doc);
         })
-
         this.postComments = commentsArray
         this.fullPost = post
        console.log(commentsArray)
@@ -335,7 +321,6 @@ closePostModal() {
 }
 .create-post .post-btn {
   position: absolute;
-
   right: 250px;
 }
 .panel-shadow {
@@ -356,7 +341,6 @@ closePostModal() {
   background-color: #fff;
   border-color: #ddd;
 }
-
 .post .post-heading {
   height: 95px;
   padding: 20px 15px;
@@ -383,6 +367,7 @@ closePostModal() {
 .post .post-image .image {
   width: 100%;
   height: auto;
+ 
 }
 .post .post-description {
   padding: 15px;
@@ -409,6 +394,10 @@ closePostModal() {
 }
 .post .post-footer .textarea-group-addon a {
   color: #454545;
+}
+.post .post-footer .form-control{
+  max-width: 1000px;
+    margin-right: 20px;
 }
 .post .post-footer .comments-list {
   padding: 0;
@@ -447,5 +436,4 @@ closePostModal() {
 .post .post-footer .comments-list .comment > .comments-list {
   margin-left: 50px;
 }
-
 </style>
