@@ -5,6 +5,7 @@ import Login from '@/components/auth/Login'
 import Signup from '@/components/auth/Signup'
 import firebase from 'firebase'
 import Wall from '@/components/wall/Wall'
+import Update from '@/components/wall/Update'
 Vue.use(Router)
 
 const router = new Router({
@@ -31,6 +32,14 @@ const router = new Router({
       path:'/wall/:id',
       name:'Wall',
       component:Wall,
+      meta:{
+        requireAuth: true
+      }
+    },
+    {
+      path:'/update',
+      name:'Update',
+      component:Update,
       meta:{
         requireAuth: true
       }

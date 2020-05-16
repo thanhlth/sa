@@ -1,7 +1,17 @@
 <template>
   <div class="wall">
     <div class=" col-sm-12 ">
-      <div class=" panel panel-white  panel-shadow  intro"><p>{{this.profile.alias}}</p></div>
+      <div class=" panel panel-white  panel-shadow  intro">
+        <img
+                       :src="this.profile.imageUrl" 
+                      class="img-circle avatar left"
+                      alt="avatar"
+                     height="60"
+                     width="60"
+                    />
+        <p>{{this.profile.alias}}</p>
+        <a ><router-link :to="{ name :'Update' }">Update</router-link></a>
+      </div>
       
     </div>
     <div class="posts container">
@@ -31,9 +41,11 @@
                 <div class="post-heading">
                   <div class="pull-left image">
                     <img
-                      src="https://bootdey.com/img/Content/user_1.jpg"
-                      class="img-circle avatar"
-                      alt="user profile image"
+                     :src="post.imageUrl" 
+                      class="img-circle avatar left"
+                      alt="avatar"
+                     height="60"
+                     width="60"
                     />
                   </div>
                   <div class="pull-left meta">
@@ -104,9 +116,11 @@
                           <div v-if="comment.postId==post.id">
                           <a class="pull-left" href="#">
                             <img
-                              class="avatar"
-                              src="https://bootdey.com/img/Content/user_3.jpg"
-                              alt="avatar"
+                              :src="comment.imageUrl" 
+                      class="img-circle avatar left"
+                      alt="avatar"
+                     height="60"
+                     width="60"
                             />
                           </a>
                           <div class="comment-body">
@@ -188,7 +202,7 @@ ref.doc(this.$route.params.id).get()
           userId: this.currentUser.uid,
           to: this.$route.params.id,
           from:this.user.alias,
-          srcImg:null,
+          imageUrl:this.user.imageUrl,
           comments: 0,
           likes: 0
         })
@@ -222,7 +236,8 @@ ref.doc(this.$route.params.id).get()
           content: this.comment.content,
           postId: postId,
           userId: this.currentUser.uid,
-          userName:this.profile.alias
+          userName:this.profile.alias,
+          imageUrl:this.user.imageUrl
         })
         .then(doc => {
           db.collection("posts")
@@ -345,12 +360,7 @@ closePostModal() {
   height: 95px;
   padding: 20px 15px;
 }
-.post .post-heading .avatar {
-  width: 60px;
-  height: 60px;
-  display: block;
-  margin-right: 15px;
-}
+
 .post .post-heading .meta .title {
   margin-bottom: 0;
 }
@@ -364,11 +374,15 @@ closePostModal() {
   margin-top: 8px;
   color: #999;
 }
+
 .post .post-image .image {
-  width: 100%;
+  
   height: auto;
+   width: 60px;
+    height: 60px;
  
 }
+ 
 .post .post-description {
   padding: 15px;
 }

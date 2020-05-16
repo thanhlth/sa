@@ -24,6 +24,18 @@
         <span class="bar"></span>
         <label for="alias">Alias:</label>
       </div>
+       <div >
+                   <img :src="imageUrl" height="60" v-if="imageUrl" />
+                   <p>Select File</p>
+                   <textarea class="btn btn-default stat-item"
+                      @click="pickFile"
+                      v-model="imageName"
+                    >
+                    <i class="fa fa-paperclip icon"></i> 
+                    </textarea>
+                   
+                   <input type="file" style="display: none" ref="image" accept="image/*" @change="onFilePicked"/>
+                 </div>
       <p class="alert alert-danger center" v-if="feedback">{{ feedback }}</p>
       <div class=" form-button text-center">
         <button class="btn btn-success">Signup</button>
@@ -46,7 +58,12 @@ export default {
       password: null,
       alias: null,
       feedback: null,
-      slug: null
+      slug: null,
+
+      imageName: null,
+      imageUrl: '',
+      downloadUrl: '',
+      imageFile: null
         }
     },
     methods:{
@@ -66,7 +83,10 @@ export default {
             .then(cred =>{
               ref.set({
                 alias: this.alias,
-                user_id: cred.user.uid
+                user_id: cred.user.uid,
+                imageUrl: this.imageUrl,
+                  downloadUrl: this.downloadUrl,
+                imgSrc:"https://bootdey.com/img/Content/user_1.jpg"
               })
             })
             .then(() => {
@@ -84,6 +104,28 @@ export default {
         console.log(this.slug);
       } else {
         this.feedback = "You must enter all fields";
+      }
+    },
+     pickFile () {
+      this.$refs.image.click()
+    },
+    onFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        this.imageName = files[0].name
+        if (this.imageName.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.imageUrl = fr.result
+          this.imageFile = files[0]
+        })
+      } else {
+        this.imageName = ''
+        this.imageFile = ''
+        this.imageUrl = ''
       }
     }
             
