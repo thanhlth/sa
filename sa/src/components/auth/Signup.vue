@@ -86,7 +86,7 @@ export default {
                 user_id: cred.user.uid,
                 imageUrl: this.imageUrl,
                   downloadUrl: this.downloadUrl,
-                imgSrc:"https://bootdey.com/img/Content/user_1.jpg"
+               
               })
             })
             .then(() => {

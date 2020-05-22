@@ -21,6 +21,16 @@ fb.auth.onAuthStateChanged(user => {
 
             store.commit('setPosts', postsArray)
         })
+
+        db.collection('shares').orderBy('createdOn', 'desc').onSnapshot(querySnapshot =>{
+            let sharesArray = []
+            querySnapshot.forEach(doc => {
+                let share = doc.data()
+                share.id= doc.id
+                sharesArray.push(share)
+            })
+            store.commit('setShares', sharesArray)
+        })
     
     }
 })
@@ -30,7 +40,7 @@ export const store = new Vuex.Store({
         currentUser: null,
         userProfile: {},
         posts: [], 
-        
+        shares:[]
         
     },
     mutations: {
@@ -43,7 +53,9 @@ export const store = new Vuex.Store({
         setPosts(state, val) {
             state.posts = val;
         },
-        
+        setShares(state, val){
+            state.shares =val;
+        }
 
     },
     actions: {

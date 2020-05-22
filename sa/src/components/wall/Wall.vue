@@ -8,6 +8,7 @@
                       alt="avatar"
                      height="60"
                      width="60"
+                     margin-top="10"
                     />
         <p>{{this.profile.alias}}</p>
         <a ><router-link :to="{ name :'Update' }">Update</router-link></a>
@@ -46,6 +47,7 @@
                       alt="avatar"
                      height="60"
                      width="60"
+                     margin-right="10"
                     />
                   </div>
                   <div class="pull-left meta">
@@ -68,7 +70,15 @@
                     >
                       <i class="fa fa-thumbs-up icon"></i>{{ post.likes }}
                     </a>
-                    
+                      <a
+                      
+                      class="btn btn-default stat-item"
+                      @click="openCommentModal(post)"
+                    >
+                      <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                    </a>
+                      
+                      
                     <a
                       
                       class="btn btn-default stat-item"
@@ -76,7 +86,25 @@
                     >
                       <i class="fa fa-comment" aria-hidden="true"></i>
                     </a>
+                    <a
+                      
+                      class="btn btn-default stat-item"
+                      @click="openShare(post)"
+                    >
+                      <i class="fa fa-share icon" aria-hidden="true"></i>
+                    </a>
                   </div>
+                  <transition name="fade">
+    <div v-if="showShare" class="c-modal">
+        <div class="c-container">
+            <a @click="closeShare">X</a>
+            
+            <p>Share this post</p>
+                <button @click="sharePost"  class="button">Share</button>
+            
+        </div>
+    </div>
+</transition>
                 </div>
                 <div class="post-footer">
                   <div class="input-group">
@@ -86,7 +114,7 @@
                       placeholder="Add a comment"
                       v-model="comment.content"
                       type="text"
-                       @onClick="openCommentModal(post)"
+                     
                     />
                     <span class="input-group-addon">
                       <a @click="addComment" :disabled="comment.content == ''"><i class="fa fa-paper-plane icon"></i></a>
@@ -95,22 +123,7 @@
                   </div>
                   <ul  class="comments-list">
                     <li class="comment">
-                      <!--
-                      <a class="pull-left" href="#">
-                        <img
-                          class="avatar"
-                          src="https://bootdey.com/img/Content/user_1.jpg"
-                          alt="avatar"
-                        />
-                      </a>
-                      <div class="comment-body">
-                        <div class="comment-heading">
-                          <h4 class="user">Gavino Free</h4>
-                          <h5 class="time">5 minutes ago</h5>
-                        </div>
-                        <p>Sure, oooooooooooooooohhhhhhhhhhhhhhhh</p>
-                      </div>
-                      -->
+                      
                       <ul  v-show="postComments.length" class="comments-list">
                         <li  v-for="(comment,index) in postComments" class="comment" :key="index">
                           <div v-if="comment.postId==post.id">
@@ -121,6 +134,161 @@
                       alt="avatar"
                      height="60"
                      width="60"
+                     margin-right="10"
+                            />
+                          </a>
+                          <div class="comment-body">
+                            <div class="comment-heading">
+                              <h4 class="user">{{comment.userName}}</h4>
+                              <h5 class="time">{{comment.createdOn | formatDate}}</h5>
+                            </div>
+                            <p>{{comment.content}}</p>
+                          </div>
+                          </div>
+                        </li>
+                        
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- comment modal -->
+            
+          </div>
+        </div>
+        
+      </div>
+      <div >
+        <div v-if="shares.length">
+          <div v-for="(post, i) in shares" class="post" :key="i">
+            <div  v-if="post.userName==profile.alias" class="col-sm-12">
+              <div class="panel panel-white post panel-shadow">
+                <div class="post-heading">
+                  
+                      <div class="pull-left image">
+                    <img
+                     :src="post.imageUrl" 
+                      class="img-circle avatar left"
+                      alt="avatar"
+                     height="60"
+                     width="60"
+                     margin-right="10"
+                    />
+                  </div>
+                  <div class="pull-left meta">
+                    <div class="title h5">
+                      <a href="#"><b>{{post.userName}}</b></a>
+                      shared a post.
+                    </div>
+                    <h6 class="text-muted time">
+                      {{ post.createdOn | formatDate }}
+                    </h6>
+
+                  </div>
+</div>
+<div class="share-heading">
+
+<div class="pull-left image">
+                    <img
+                     :src="post.imageUrlshare" 
+                      class="img-circle avatar left"
+                      alt="avatar"
+                     height="60"
+                     width="60"
+                     margin-right="10"
+                    />
+                  </div>
+                  <div class="pull-left meta">
+                    <div class="title h5">
+                      <a href="#"><b>{{post.from}}</b></a>
+                     
+                    </div>
+                    <h6 class="text-muted time">
+                      {{ post.time | formatDate }}
+                    </h6>
+                    <div>
+                      
+                  </div>
+                    </div>
+
+                  <p>{{ post.content | trimLength }}</p>
+
+ 
+                  
+                </div>
+                
+                <div class="post-description">
+                  
+                  
+                  <div class="stats">
+                    <a
+                      
+                      class="btn btn-default stat-item"
+                      @click="likeShare(post.id, post.likes)"
+                    >
+                      <i class="fa fa-thumbs-up icon"></i>{{ post.likes }}
+                    </a>
+                      <a
+                      
+                      class="btn btn-default stat-item"
+                      @click="openCommentModal(post)"
+                    >
+                      <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                    </a>
+                      
+                      
+                    <a
+                      
+                      class="btn btn-default stat-item"
+                      @click="viewPost(post)"
+                    >
+                      <i class="fa fa-comment" aria-hidden="true"></i>
+                    </a>
+                    
+                  </div>
+                  <transition name="fade">
+    <div v-if="showShare" class="c-modal">
+        <div class="c-container">
+            <a @click="closeShare">X</a>
+            
+            <p>Share this post</p>
+                <button @click="sharePost"  class="button">Share</button>
+            
+        </div>
+    </div>
+</transition>
+                </div>
+                <div class="post-footer">
+                  <div class="input-group">
+                    
+                    <input
+                      class="form-control"
+                      placeholder="Add a comment"
+                      v-model="comment.content"
+                      type="text"
+                     
+                    />
+                    <span class="input-group-addon">
+                      <a @click="addCommentP" :disabled="comment.content == ''"><i class="fa fa-paper-plane icon"></i></a>
+                    </span>
+                    
+                  </div>
+                  <ul  class="comments-list">
+                    <li class="comment">
+                      
+                      <ul  v-show="postComments.length" class="comments-list">
+                        <li  v-for="(comment,index) in postComments" class="comment" :key="index">
+                          <div v-if="comment.postId==post.id">
+                          <a class="pull-left" href="#">
+                            <img
+                              :src="comment.imageUrl" 
+                      class="img-circle avatar left"
+                      alt="avatar"
+                     height="60"
+                     width="60"
+                     margin-right="10"
                             />
                           </a>
                           <div class="comment-body">
@@ -169,13 +337,20 @@ export default {
         content: "",
         postComments: 0,
       },
-      
-      
+      share:{
+        postId:"",
+        postShares:0,
+        from:"",
+        content:"",
+        imageUrlshare:"",
+        time:""
+      },
+      showShare:false,
       postComments: []
     };
   },
   computed: {
-    ...mapState(["userProfile", "currentUser", "posts"])
+    ...mapState(["userProfile", "currentUser", "posts", "shares"])
   },
   created(){
     let ref = db.collection('users')
@@ -185,6 +360,7 @@ ref.where('user_id','==',firebase.auth().currentUser.uid)
 snapshot.forEach(doc => {
     this.user = doc.data(),
     this.user.id= doc.id
+    
 })
 })
 ref.doc(this.$route.params.id).get()
@@ -204,7 +380,8 @@ ref.doc(this.$route.params.id).get()
           from:this.user.alias,
           imageUrl:this.user.imageUrl,
           comments: 0,
-          likes: 0
+          likes: 0,
+          shares:0
         })
         .then(ref => {
           this.post.content = "";
@@ -236,7 +413,7 @@ ref.doc(this.$route.params.id).get()
           content: this.comment.content,
           postId: postId,
           userId: this.currentUser.uid,
-          userName:this.profile.alias,
+          userName:this.user.alias,
           imageUrl:this.user.imageUrl
         })
         .then(doc => {
@@ -254,7 +431,9 @@ ref.doc(this.$route.params.id).get()
         });
     },
     likePost(postId, postLikes) {
+      
       let docId = `${this.currentUser.uid}_${postId}`;
+      console.log(docId);
       db.collection("likes")
         .doc(docId)
         .get()
@@ -298,10 +477,124 @@ ref.doc(this.$route.params.id).get()
         console.log(err)
     })
 },
+openShare(post) {
+      this.share.postId = post.id;
+      this.share.from = post.from;
+      this.share.postShares = post.shares;
+      this.showShare = true,
+      this.share.time= post.createdOn,
+      this.share.imageUrlshare=post.imageUrl,
+      this.share.content= post.content
+      
+    },
+    closeShare() {
+      this.share.postId = "";
+      this.share.from = "";
+      this.share.postShares = "";
+    this.showShare = false,
+    this.share.time="",
+    this.share.imageUrlshare="",
+    this.share.content = ""
+    },
+sharePost(){
+  
+      let postId = this.share.postId;
+      let postShares = this.share.postShares;
+      
+      db.collection("shares")
+        .add({
+          createdOn: new Date(),
+          content: this.share.content,
+          postId: postId,
+
+          userId: this.currentUser.uid,
+          userName:this.user.alias,
+          imageUrl:this.user.imageUrl,
+          imageUrlshare:this.share.imageUrlshare,
+          time: this.share.time,
+          from:this.share.from,    
+          comments:0,
+          likes:0,
+          shares:0    
+              
+        })
+        .then(doc => {
+          db.collection("posts")
+            .doc(postId)
+            .update({
+              shares: postShares + 1
+            })
+            .then(() => {
+              this.closeCommentModal();
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
+},
 closePostModal() {
     this.postComments = []
     
-}
+},
+likeShare(postId, postLikes) {
+      
+      let docId = `${postId}`;
+      console.log(docId);
+      db.collection("likes")
+        .doc(docId)
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            return;
+          }
+          db.collection("likes")
+            .doc(docId)
+            .set({
+              postId: postId,
+              userId: this.currentUser.uid
+            })
+            .then(() => {
+              // update post likes
+              db.collection("shares")
+                .doc(postId)
+                .update({
+                  likes: postLikes + 1
+                });
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    addCommentP() {
+      
+      let postId = this.comment.postId;
+      let postComments = this.comment.postComments;
+      
+      db.collection("comments")
+        .add({
+          createdOn: new Date(),
+          content: this.comment.content,
+          postId: postId,
+          userId: this.currentUser.uid,
+          userName:this.user.alias,
+          imageUrl:this.user.imageUrl
+        })
+        .then(doc => {
+          db.collection("shares")
+            .doc(postId)
+            .update({
+              comments: postComments + 1
+            })
+            .then(() => {
+              this.closeCommentModal();
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
   },
   filters: {
     formatDate(val) {
@@ -321,7 +614,7 @@ closePostModal() {
   }
 };
 </script>
-<style scoped>
+<style >
 .create-post {
   
   margin-top: 60px;
@@ -360,7 +653,15 @@ closePostModal() {
   height: 95px;
   padding: 20px 15px;
 }
-
+.post .share-heading{
+  
+  margin: 50px;
+    border: 1px solid;
+    padding-top: 5px;
+    margin: 20px;
+    padding-left: 20px;
+    min-height: 100px;
+}
 .post .post-heading .meta .title {
   margin-bottom: 0;
 }
@@ -375,11 +676,10 @@ closePostModal() {
   color: #999;
 }
 
-.post .post-image .image {
+ .image .img-circle{
   
-  height: auto;
-   width: 60px;
-    height: 60px;
+  margin-top: 10px;
+  margin-right: 10px;
  
 }
  
