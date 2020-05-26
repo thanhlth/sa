@@ -24,17 +24,26 @@
         <span class="bar"></span>
         <label for="alias">Alias:</label>
       </div>
-       <div >
+       
+                   <br/>
                    <img :src="imageUrl" height="60" v-if="imageUrl" />
-                   <p>Select File</p>
-                   <textarea class="btn btn-default stat-item"
+                   <br/>
+                   <div class="group">
+                    <textarea class="btn btn-default stat-item"
                       @click="pickFile"
                       v-model="imageName"
                     >
-                    <i class="fa fa-paperclip icon"></i> 
+                    
                     </textarea>
-                   
+                    <form class="md-form">
+                    <div class="file-field big">
+                    
                    <input type="file" style="display: none" ref="image" accept="image/*" @change="onFilePicked"/>
+                   <label for="alias">Select File:</label>
+                   </div>
+
+                   </form>
+
                  </div>
       <p class="alert alert-danger center" v-if="feedback">{{ feedback }}</p>
       <div class=" form-button text-center">
@@ -85,7 +94,7 @@ export default {
                 alias: this.alias,
                 user_id: cred.user.uid,
                 imageUrl: this.imageUrl,
-                  downloadUrl: this.downloadUrl,
+                  
                
               })
             })
@@ -139,4 +148,8 @@ export default {
    border: 1px solid #fdfdfd;
    background-color: white;
 }
+.file-field.big .file-path-wrapper {
+height: 3.2rem; }
+.file-field.big .file-path-wrapper .file-path {
+height: 3rem; }
 </style>
