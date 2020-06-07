@@ -46,6 +46,7 @@ const router = new Router({
     }
   ]
 })
+/* This is an example, has worked really well for several projects */
 router.beforeEach((to, from, next) => {
   //check to see if router requires auth
   if(to.matched.some(rec => rec.meta.requireAuth)){
@@ -62,4 +63,5 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
 export default router

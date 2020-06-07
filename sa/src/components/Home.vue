@@ -3,13 +3,13 @@
     <div class="posts container">
       <div class="panel panel-white post panel-shadow create-post col-sm-12">
         <p>Create a post</p>
-        <form @submit.prevent>
-          <textarea
+        <form @submit.prevent class="form-inline active-cyan-4">
+          <input
             id="form7"
             class="md-textarea form-control"
             rows="3"
             v-model.trim="post.content"
-          ></textarea>
+          />
           <button
             @click="createPost"
             class="post-btn btn btn-info"
@@ -17,10 +17,20 @@
           >Post</button>
         </form>
       </div>
+      <div class="panel panel-white post panel-shadow  col-sm-12" >
+        
+          <input class="form-control mr-sm-2 " type="text"  v-model="search" placeholder="Search blogs...">
+
+        
+        
+        <br>
+        <input class="form-control mr-sm-2"  type="text" v-model="search2" placeholder="Search shares...">
+      </div>
       <div>
-        <div v-if="posts.length">
-          <div v-for="(post, i) in posts" class="post" :key="i">
-            <div class="col-sm-12">
+        <div v-if="filterBlogs.length">
+          <div v-for="(post, i) in filterBlogs" class="post" :key="i">
+            <div class="col-sm-12" style="padding-right: 0px;
+    padding-left: 0px;">
               <div class="panel panel-white post panel-shadow">
                 <div class="post-heading">
                   <div class="pull-left image">
@@ -31,11 +41,15 @@
                       height="60"
                       width="60"
                       margin-right="10"
+                       style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                     />
                   </div>
                   <div class="pull-left meta">
                     <div class="title h5">
-                      <a href="#">
+                      <a @click="gotowall(post.from)">
                         <b>{{post.from}}</b>
                       </a>
                       made a post.
@@ -99,11 +113,15 @@
                                 height="60"
                                 width="60"
                                 margin-right="10"
+                                 style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                               />
                             </a>
                             <div class="comment-body">
                               <div class="comment-heading">
-                                <h4 class="user">{{comment.userName}}</h4>
+                                <h4 class="user"><a @click="gotowall(comment.userName)">{{comment.userName}}</a></h4>
                                 <h5 class="time">{{comment.createdOn | formatDate}}</h5>
                               </div>
                               <p>{{comment.content}}</p>
@@ -122,9 +140,10 @@
         </div>
       </div>
       <div>
-        <div v-if="shares.length">
-          <div v-for="(post, i) in shares" class="post" :key="i">
-            <div class="col-sm-12">
+        <div v-if="filterShares.length">
+          <div v-for="(post, i) in filterShares" class="post" :key="i">
+            <div class="col-sm-12" style="padding-right: 0px;
+    padding-left: 0px;">
               <div class="panel panel-white post panel-shadow">
                 <div class="post-heading">
                   <div class="pull-left image">
@@ -135,11 +154,15 @@
                       height="60"
                       width="60"
                       margin-right="10"
+                       style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                     />
                   </div>
                   <div class="pull-left meta">
                     <div class="title h5">
-                      <a href="#">
+                      <a @click="gotowall(post.userName)">
                         <b>{{post.userName}}</b>
                       </a>
                       shared a post.
@@ -156,11 +179,15 @@
                       height="60"
                       width="60"
                       margin-right="10"
+                       style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                     />
                   </div>
                   <div class="pull-left meta">
                     <div class="title h5">
-                      <a href="#">
+                      <a @click="gotowall(post.from)">
                         <b>{{post.from}}</b>
                       </a>
                     </div>
@@ -205,7 +232,7 @@
                       type="text"
                     />
                     <span class="input-group-addon">
-                      <a @click="addCommentP" :disabled="comment.content == ''">
+                      <a @click="addCommentP" :disabled="comment.content == '' " >
                         <i class="fa fa-paper-plane icon"></i>
                       </a>
                     </span>
@@ -223,11 +250,15 @@
                                 height="60"
                                 width="60"
                                 margin-right="10"
+                                 style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                               />
                             </a>
                             <div class="comment-body">
                               <div class="comment-heading">
-                                <h4 class="user">{{comment.userName}}</h4>
+                                <h4 class="user"><a @click="gotowall(comment.userName)">{{comment.userName}}</a></h4>
                                 <h5 class="time">{{comment.createdOn | formatDate}}</h5>
                               </div>
                               <p>{{comment.content}}</p>
@@ -277,11 +308,29 @@ export default {
         time: ""
       },
       showShare: false,
-      postComments: []
+      postComments: [],
+      search:"",
+      search2:""
     };
   },
   computed: {
-    ...mapState(["userProfile", "currentUser", "posts", "shares"])
+    ...mapState(["userProfile", "currentUser", "posts", "shares"]),
+    filterBlogs:function(){
+      return this.posts.filter((post) => {
+        return post.content.match(this.search) ||
+        post.to.match(this.search) ||
+        post.from.match(this.search)
+      })
+    },
+    filterShares:function(){
+      return this.shares.filter((share) =>{
+        return share.content.match(this.search2) ||
+        share.to.match(this.search2) ||
+        share.userName.match(this.search2)
+      })
+
+    }
+
   },
   created() {
     let ref = db.collection("users");
@@ -296,6 +345,7 @@ export default {
       });
    
   },
+  
   methods: {
     createPost() {
       db.collection("posts")
@@ -514,6 +564,10 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    gotowall(user_id){
+      
+      this.$router.push({name: 'Wall', params: {id: user_id} });
     }
   },
   filters: {
@@ -534,4 +588,18 @@ export default {
 };
 </script>
 <style >
+.input .form-control{
+  margin-top: 10px;
+}
+.active-cyan-2 input[type=text]:focus:not([readonly]) {
+  border-bottom: 1px solid #4dd0e1;
+  box-shadow: 0 1px 0 0 #4dd0e1;
+}
+.active-cyan input[type=text] {
+  border-bottom: 1px solid #4dd0e1;
+  box-shadow: 0 1px 0 0 #4dd0e1;
+}
+.active-cyan .fa, .active-cyan-2 .fa {
+  color: #4dd0e1;
+}
 </style>

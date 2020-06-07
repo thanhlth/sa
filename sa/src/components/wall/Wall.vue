@@ -1,7 +1,12 @@
 <template>
   <div class="wall">
     <div class="col-sm-12">
-      <div class="panel panel-white panel-shadow intro">
+      <div
+        class="panel panel-white panel-shadow intro col-sm-12"
+        style="max-width: 1110px;
+      position: relative;
+      left: 105px;"
+      >
         <img
           :src="this.profile.imageUrl"
           class="img-circle avatar left"
@@ -9,6 +14,10 @@
           height="60"
           width="60"
           margin-top="10"
+          style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
         />
         <p>{{this.profile.alias}}</p>
         <a>
@@ -36,7 +45,8 @@
       <div>
         <div v-if="posts.length">
           <div v-for="(post, i) in posts" class="post" :key="i">
-            <div v-if="post.to==profile.alias" class="col-sm-12">
+            <div v-if="post.to==profile.alias" class="col-sm-12" style="padding-right: 0px;
+    padding-left: 0px;">
               <div class="panel panel-white post panel-shadow">
                 <div class="post-heading">
                   <div class="pull-left image">
@@ -47,11 +57,15 @@
                       height="60"
                       width="60"
                       margin-right="10"
+                      style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                     />
                   </div>
                   <div class="pull-left meta">
                     <div class="title h5">
-                      <a href="#">
+                      <a @click="gotowall(post.from)">
                         <b>{{post.from}}</b>
                       </a>
                       made a post.
@@ -79,10 +93,21 @@
                   </div>
                   <transition name="fade">
                     <div v-if="showShare" class="c-modal">
-                      <div class="c-container">
-                        <a @click="closeShare">X</a>
+                      <div class="c-container" style="border: 1px solid #747576;
+    width: 500px;">
+    <div class =" mybox"><a @click="closeShare" style="position: relative;
+    right: -240px;
+    color: #c2c5cd;">X</a></div>
+                        
                         <p>Share this post</p>
-                        <button @click="sharePost" class="button">Share</button>
+                        <div>
+<button @click="sharePost" type="button" class="btn btn-primary" style="
+    right: -210px;
+    position:relative;
+    bottom: 5px;
+    height: 35px;" >Share</button>
+                        </div>
+                        
                       </div>
                     </div>
                   </transition>
@@ -90,14 +115,14 @@
                 <div class="post-footer">
                   <div class="input-group">
                     <input
-
                       class="form-control"
                       placeholder="Add a comment"
                       v-model="comment.content"
                       type="text"
                     />
                     <span class="input-group-addon">
-                      <a @click="addComment" :disabled="comment.content == ''">
+                      <a @click="addComment" :disabled="comment.content == ''" style="position: relative;
+    top: 10px;">
                         <i class="fa fa-paper-plane icon"></i>
                       </a>
                     </span>
@@ -115,6 +140,10 @@
                                 height="60"
                                 width="60"
                                 margin-right="10"
+                                 style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                               />
                             </a>
                             <div class="comment-body">
@@ -140,7 +169,8 @@
       <div>
         <div v-if="shares.length">
           <div v-for="(post, i) in shares" class="post" :key="i">
-            <div v-if="post.userName==profile.alias" class="col-sm-12">
+            <div v-if="post.userName==profile.alias" class="col-sm-12" style="padding-right: 0px;
+    padding-left: 0px;">
               <div class="panel panel-white post panel-shadow">
                 <div class="post-heading">
                   <div class="pull-left image">
@@ -151,6 +181,10 @@
                       height="60"
                       width="60"
                       margin-right="10"
+                       style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                     />
                   </div>
                   <div class="pull-left meta">
@@ -172,11 +206,15 @@
                       height="60"
                       width="60"
                       margin-right="10"
+                       style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                     />
                   </div>
                   <div class="pull-left meta">
                     <div class="title h5">
-                      <a href="#">
+                      <a @click="gotowall(post.from)">
                         <b>{{post.from}}</b>
                       </a>
                     </div>
@@ -201,16 +239,7 @@
                       <i class="fa fa-comment" aria-hidden="true"></i>
                     </a>
                   </div>
-                  <transition name="fade">
-                    <div v-if="showShare" class="c-modal">
-                      <div class="c-container">
-                        <a @click="closeShare">X</a>
-
-                        <p>Share this post</p>
-                        <button @click="sharePost" class="button">Share</button>
-                      </div>
-                    </div>
-                  </transition>
+                  
                 </div>
                 <div class="post-footer">
                   <div class="input-group">
@@ -219,9 +248,10 @@
                       placeholder="Add a comment"
                       v-model="comment.content"
                       type="text"
-                    />
+                    /> 
                     <span class="input-group-addon">
-                      <a @click="addCommentP" :disabled="comment.content == ''">
+                      <a @click="addCommentP" :disabled="comment.content == ''" style="position: relative;
+    top: 10px;">
                         <i class="fa fa-paper-plane icon"></i>
                       </a>
                     </span>
@@ -239,6 +269,10 @@
                                 height="60"
                                 width="60"
                                 margin-right="10"
+                                 style=" border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;"
                               />
                             </a>
                             <div class="comment-body">
@@ -301,6 +335,7 @@ export default {
   },
   created() {
     let ref = db.collection("users");
+
     //get current user
     ref
       .where("user_id", "==", firebase.auth().currentUser.uid)
@@ -315,9 +350,8 @@ export default {
       .get()
       .then(user => {
         //user
-        (this.profile = user.data()),
-         (this.profile.id = user.id),
-         (this.profile.imageUrl = user.imageUrl);
+        this.profile = user.data();
+        // (this.profile.id = user.id)
       });
   },
   methods: {
@@ -538,6 +572,10 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    gotowall(user_id) {
+      console.log(user_id);
+      this.$router.push({ name: "Wall", params: { id: user_id } });
     }
   },
   filters: {
@@ -578,6 +616,8 @@ export default {
   background-color: white;
   margin-top: 10px;
   margin-bottom: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .panel-white {
   border: 1px solid #dddddd;
@@ -628,6 +668,7 @@ export default {
 .post .post-description p {
   font-size: 14px;
   text-align: left;
+      padding-left: 20px;
 }
 .post .post-description .stats {
   margin-top: 20px;
@@ -689,4 +730,9 @@ export default {
 .post .post-footer .comments-list .comment > .comments-list {
   margin-left: 50px;
 }
+.mybox{
+  background-color: #f5f6f7;
+    border-bottom: 1px solid #c2c5cd;
+}
+
 </style>
